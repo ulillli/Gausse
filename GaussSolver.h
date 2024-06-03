@@ -33,7 +33,7 @@ public:
 			int indexIV = -1;
 			for (int j = 0; j < m-1; j++) {
 				for (int t = i; t < n; t++) {
-					if ((M[t][j] != 0) && (abs(M[t][j]) > Ved)) {
+					if ((M[t][j] != 0) && ((abs(M[t][j]) > abs(Ved))||(Ved== -100000000))) {
 						Ved = M[t][j];
 						indexIV = t;
 						indexVed[i] = j;
@@ -45,15 +45,16 @@ public:
 					break;
 				}
 			}
+			//std::cout << Ved << std::endl;
 			//std::cout << M << std::endl;
 			if(Ved!= -100000000){
 				for (int j = 0; j < m; j++) M[i][j] /= Ved;
 				Ved = 1;
 				for (int t = 0; t < n; t++) {
 					if (t != i) {
-						double tmp = M[t][indexVed[i]] / Ved;
-						for (int j = 0; j < m - 1; j++) {
-							M[t][j] -= M[i][j] * tmp;
+						double tmp = (double)M[t][indexVed[i]] / Ved;
+						for (int j = 0; j < m; j++) {
+							M[t][j] -= (double)M[i][j] * tmp;
 
 						}
 					}
@@ -89,7 +90,7 @@ public:
 			int p = 1;
 			for (int i = 0; i < m - 1; i++) {
 				bool flag = true;
-				for (int j = 0; j < n; j++) { // ïğîâåğêà: òåêóùèé ñòîëáåö îòâå÷àåò çà áàçèñíóş ïåğåìåííóş èëè íåò
+				for (int j = 0; j < n; j++) { // Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ĞºĞ°: Ñ‚ĞµĞºÑƒÑ‰Ğ¸Ğ¹ ÑÑ‚Ğ¾Ğ»Ğ±ĞµÑ† Ğ¾Ñ‚Ğ²ĞµÑ‡Ğ°ĞµÑ‚ Ğ·Ğ° Ğ±Ğ°Ğ·Ğ¸ÑĞ½ÑƒÑ Ğ¿ĞµÑ€ĞµĞ¼ĞµĞ½Ğ½ÑƒÑ Ğ¸Ğ»Ğ¸ Ğ½ĞµÑ‚
 					if (indexVed[j] == i) {
 						flag = false;
 						ans[0][j] = M[j][m - 1];
