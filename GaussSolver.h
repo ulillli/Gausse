@@ -98,7 +98,10 @@ public:
 					}
 				}
 				if (flag == true) {
-					for (int j = 0; j < m-1; j++) ans[p][j] = -M[j][i];
+					int a = 0;
+					if (m-1< n) a = m-1;
+					else a = n;
+					for (int j = 0; j < a; j++) ans[p][j] = -M[j][i]; //
 					ans[p][i] = 1;
 					p++;
 				}
