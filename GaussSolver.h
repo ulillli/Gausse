@@ -6,7 +6,7 @@
 class GaussSolver {
 	double epsilone;
 public:
-	GaussSolver(double _epsilone) : epsilone(_epsilone) {};
+	GaussSolver(double _epsilone=pow(10, -10)) : epsilone(_epsilone) {};
 	bool comp(double b)  {
 		//double epsilone = pow(10,-12);
 		return abs(b)<epsilone;
