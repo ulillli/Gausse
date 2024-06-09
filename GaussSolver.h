@@ -4,17 +4,19 @@
 
 
 class GaussSolver {
+	double epsilone;
 public:
-	bool comp(double& b) const {
-		double epsilone=0.;
-		return abs(b)==epsilone;
+	GaussSolver(double _epsilone) : epsilone(_epsilone) {};
+	bool comp(double b)  {
+		//double epsilone = pow(10,-12);
+		return abs(b)<epsilone;
 	}
 	void swap(const Matrix & A, int i, int j) {
-		for (int t = 0; t < A.getM(); t++) {
-			double  tmp = A[i][t];
-			A[i][t] = A[j][t];
-			A[j][t] = tmp;
-		}
+			for (int t = 0; t < A.getM(); t++) {
+				double  tmp = A[i][t];
+				A[i][t] = A[j][t];
+				A[j][t] = tmp;
+			}
 	}
 	std::vector<Vector> solve(const Matrix& A, const Vector& v){
 		Matrix M(A.getN(), A.getM() + 1);
@@ -45,21 +47,22 @@ public:
 					break;
 				}
 			}
-			//std::cout << Ved << std::endl;
+			//std::cout << Ved << " " << std::endl;
 			//std::cout << M << std::endl;
 			if(Ved!= -100000000){
-				for (int j = 0; j < m; j++) M[i][j] /= Ved;
+				for (int j = 0; j < m; j++)  M[i][j] = (double)M[i][j]/Ved;
 				Ved = 1;
 				for (int t = 0; t < n; t++) {
 					if (t != i) {
-						double tmp = (double)M[t][indexVed[i]] / Ved;
+						double tmp = M[t][indexVed[i]];
 						for (int j = 0; j < m; j++) {
-							M[t][j] -= (double)M[i][j] * tmp;
-
+							M[t][j] -= M[i][j] * tmp;
+							if (comp(M[t][j])) {
+								M[t][j] = 0;
+							}
 						}
 					}
 				}
-				//std::cout << M << std::endl;
 			}
 		}
 		for (int i = 1; i < n; i++) {
@@ -85,6 +88,7 @@ public:
 		//std::cout << M << std::endl;
 		//std::cout << indexVed << rank << std::endl;
 		if (Flag == true) {
+			//std::cout << "ANS\n";
 			std::vector<Vector> ans(m - rank);
 			for (int i = 0; i < m - rank; i++) ans[i] = Vector(m - 1);
 			int p = 1;
@@ -93,22 +97,26 @@ public:
 				for (int j = 0; j < n; j++) { // проверка: текущий столбец отвечает за базисную переменную или нет
 					if (indexVed[j] == i) {
 						flag = false;
-						ans[0][j] = M[j][m - 1];
+						ans[0][indexVed[j]] = M[j][m - 1];
 						break;
 					}
 				}
 				if (flag == true) {
 					int a = 0;
-					if (m-1< n) a = m-1;
+					if (m-1<n) a = m-1;
 					else a = n;
-					for (int j = 0; j < a; j++) ans[p][j] = -M[j][i]; //
+					for (int j = 0; j < rank; j++) {
+						ans[p][indexVed[j]] = -M[j][i]; 
+					}
 					ans[p][i] = 1;
 					p++;
 				}
 			}
 			return ans;
 		}
-		std::vector<Vector> ans;
-		return ans;
+		else {
+			std::vector<Vector> ans;
+			return ans;
+		}
 	}
 };
